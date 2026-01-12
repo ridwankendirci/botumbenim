@@ -5,7 +5,7 @@ module.exports = {
 
     // Mesajların gönderileceği Grup ID'si
     // Render'da 'CHAT_ID' adıyla Environment Variable olarak ekleyebilirsiniz.
-    telegramChatId: process.env.CHAT_ID || '-5130008593',
+    telegramChatId: process.env.CHAT_ID || '-3445538770',
 
     // Takip edilecek TikTok kullanıcı adları
     // Render'da users.json sıfırlanabilir, bu yüzden ana listeyi burada tutmak daha güvenlidir.
