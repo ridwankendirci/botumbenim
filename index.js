@@ -121,6 +121,23 @@ if (bot) {
         }
     });
 
+    // /test
+    bot.onText(/\/test/, (msg) => {
+        const chatId = msg.chat.id;
+        bot.sendMessage(chatId, "🧪 Test bildirimi tetikleniyor... (Eğer bu mesajdan sonra bildirim gelmezse Config ayarlarında Chat ID yanlıştır)");
+
+        // Spam kontrolüne takılmaması için rastgele sayı ekle
+        sendNotification(`TEST_LISTESI_${path.basename("t" + Date.now())}`, 'live_started');
+    });
+
+    // /kontrol [kullanici_adi] - Manuel bağlantı kontrolü
+    bot.onText(/\/kontrol (.+)/, async (msg, match) => {
+        const chatId = msg.chat.id;
+        const username = match[1].trim();
+        bot.sendMessage(chatId, `🔍 ${username} için bağlantı kontrolü yapılıyor... Logları izle.`);
+        await connectToUser(username);
+    });
+
     // Chat ID bulmak için log (Yine de kalsın)
     bot.on('message', (msg) => {
         if (!msg.text.startsWith('/')) { // Komut olmayan mesajlar
