@@ -146,13 +146,16 @@ async function connectToUser(username) {
     };
 
     if (config.sessionId) {
-        options.sessionId = config.sessionId;
         if (config.ttTargetIdc) {
+            options.sessionId = config.sessionId;
             options.ttTargetIdc = config.ttTargetIdc;
+        } else {
+            console.warn(`⚠️ ${username} için Session ID tanımlı ama TT_TARGET_IDC eksik! Anonim moda dönülüyor.`);
+            // Session ID'yi options'a ekleme ki kütüphane hata fırlatıp botu durdurmasın.
         }
-        // console.log(`🔑 Session ID kullanılıyor: ${config.sessionId.slice(0, 5)}...`);
     }
 
+    // Artık parametreler güvenli olduğu için crash olmaz
     const tiktokLiveConnection = new WebcastPushConnection(username, options);
 
     try {
