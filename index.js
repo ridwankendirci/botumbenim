@@ -136,7 +136,21 @@ async function connectToUser(username) {
         return;
     }
 
-    const tiktokLiveConnection = new WebcastPushConnection(username);
+    const options = {
+        processInitialData: false,
+        enableWebsocketUpgrade: true,
+        clientParams: {
+            "app_language": "tr-TR",
+            "device_platform": "web_pc"
+        }
+    };
+
+    if (config.sessionId) {
+        options.sessionId = config.sessionId;
+        // console.log(`🔑 Session ID kullanılıyor: ${config.sessionId.slice(0, 5)}...`);
+    }
+
+    const tiktokLiveConnection = new WebcastPushConnection(username, options);
 
     try {
         const state = await tiktokLiveConnection.connect();
@@ -150,8 +164,8 @@ async function connectToUser(username) {
         tiktokLiveConnection.on('error', (err) => handleDisconnect(username, 'Hata'));
 
     } catch (err) {
-        // Yayında değilse sessizce geç
-        // console.log(`💤 ${username} yayında değil.`);
+        // Yayında değilse veya bağlantı hatası varsa logla
+        console.error(`❌ ${username} bağlantı hatası:`, err.message || err);
     }
 }
 
@@ -169,13 +183,19 @@ function handleDisconnect(username, reason) {
 }
 
 function sendNotification(username, type) {
-    if (!bot || config.telegramChatId.includes('BURAYA')) return;
+    if (!bot || config.telegramChatId.includes('BURAYA')) {
+        console.log('⚠️ Bildirim gönderilemedi: Bot token veya Chat ID eksik.');
+        return;
+    }
 
     const now = Date.now();
     const lastTime = lastNotificationTime[`${username}_${type}`] || 0;
 
     // 60 saniye spam koruması
-    if (now - lastTime < 60000) return;
+    if (now - lastTime < 60000) {
+        console.log(`⏳ ${username} için bildirim spam korumasına takıldı.`);
+        return;
+    }
 
     lastNotificationTime[`${username}_${type}`] = now;
 
@@ -186,7 +206,8 @@ function sendNotification(username, type) {
         message = `🏁 <b>${username} YAYINI KAPATTI.</b>`;
     }
 
-    bot.sendMessage(config.telegramChatId, message, { parse_mode: 'HTML' }).catch(e => console.error(e.message));
+    console.log(`📤 Telegram mesajı gönderiliyor (${config.telegramChatId}): ${message}`);
+    bot.sendMessage(config.telegramChatId, message, { parse_mode: 'HTML' }).catch(e => console.error('❌ Telegram mesaj hatası:', e.message));
 }
 
 // Ana Başlatıcı
