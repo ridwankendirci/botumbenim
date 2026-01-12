@@ -19,5 +19,9 @@ module.exports = {
 
     // TikTok Session ID (Render'da 'SESSION_ID' olarak ekleyin)
     // TikTok sürekli giriş isteyebileceği için bu cookie çok önemlidir.
-    sessionId: process.env.SESSION_ID || ''
+    sessionId: process.env.SESSION_ID || '',
+
+    // TikTok Target IDC (Render'da 'TT_TARGET_IDC' olarak ekleyin)
+    // Bu da session ID ile birlikte gereklidir.
+    ttTargetIdc: process.env.TT_TARGET_IDC || ''
 };

@@ -147,6 +147,9 @@ async function connectToUser(username) {
 
     if (config.sessionId) {
         options.sessionId = config.sessionId;
+        if (config.ttTargetIdc) {
+            options.ttTargetIdc = config.ttTargetIdc;
+        }
         // console.log(`🔑 Session ID kullanılıyor: ${config.sessionId.slice(0, 5)}...`);
     }
 
