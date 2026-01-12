@@ -156,6 +156,7 @@ async function connectToUser(username) {
     const options = {
         processInitialData: false,
         enableWebsocketUpgrade: true,
+        disableEulerFallbacks: true,
         clientParams: {
             "app_language": "tr-TR",
             "device_platform": "web_pc"
